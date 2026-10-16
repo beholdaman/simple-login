@@ -21,11 +21,14 @@ ini_set("error_reporting", E_ALL);
             <label for="input-password" class="form-label">Password</label>
             <input type="password" class="form-control" id="input-password">
         </div>
+
+        <div class="sm:container" style="margin-left:345px">
+        <!--button to recover password-->
+        <a class= "theme-info underline-offset-2 underline-20 hover:underline-100" href="reset.php" >Reset your password</a>
+        </div>
+
         <div class="sm:container" style="padding:15px; margin-left:340px">
         <button type="button" class="btn-solid theme-success">Log In</button>
-        </div>
-        <!--button to recover password-->
-
         </div>
         
 </form>
