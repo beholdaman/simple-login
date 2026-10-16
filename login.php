@@ -13,17 +13,19 @@ ini_set("error_reporting", E_ALL);
     <script type="module" src="https://cdn.jsdelivr.net/npm/bootstrap@6.0.0-alpha.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-1a/pXj49ZQ1aHEmrJ+gMw1otqoVsYwlEnlD8mIfY2TV03r20Y0CN7uqx1tQogjPL" crossorigin="anonymous"></script>
 <body>
     <form>
-        <div class="md:container">
+        <div class="sm:container" style="padding:10px; margin-top:50px; width:50%">
             <label for="input-email" class="form-label">Email address</label>
-            <input type="email" class="form-control" id="input-email" aria-describedby="emailHelp">
+            <input type="email" class="form-control" id="input-email" aria-describedby="emailHelp" placeholder="name@example.com">
         </div>
-        <div class="md:container">
-            <label for="exampleInputPassword1" class="form-label">Password</label>
-            <input type="password" class="form-control" id="exampleInputPassword1">
+        <div class="sm:container" style="padding:10px; width:50%">
+            <label for="input-password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="input-password">
+        </div>
+        <div class="sm:container" style="padding:15px; margin-left:340px">
+        <button type="button" class="btn-solid theme-success">Log In</button>
         </div>
         <!--button to recover password-->
-        <div class="md:container">
-        <button type="submit" class="btn-solid theme-primary">Submit</button>
+
         </div>
         
 </form>
