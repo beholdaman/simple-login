@@ -49,7 +49,9 @@ print($logged);
 
         <div class="sm:container" style="padding:10px">
         <button type="submit" class="btn-solid theme-success">Log In</button>
+        <a href="registration.php"><button type="button" formaction= "registration.php" class="btn-outline theme-success">Registration</button></a>
         </div>
+
     </form>
     </div>
 <?php }else{ ?>
