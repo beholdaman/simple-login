@@ -42,9 +42,9 @@ if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registra
     }
 }
 
-$errors = ( ($name_err || $email_err || $password_err || $password2_err) && 
-            (isset($_POST) && isset($_POST["registration-name"]) && (isset($_POST["registration-email"])) 
-             && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) ) );
+$success = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
+            &&
+            (!$name_err) && (!$email_err) && (!$password_err) && (!$password2_err));
 
 
 ?>
@@ -60,7 +60,7 @@ $errors = ( ($name_err || $email_err || $password_err || $password2_err) &&
 
 <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
 
-<?php if(!$errors) { ?>
+<?php if($success) { ?>
 <div class="sm:container" style="padding:10px">
 <p class="bg-success fg-contrast-success">Registration of user was successful</p>
 </div>
