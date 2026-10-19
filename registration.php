@@ -42,9 +42,52 @@ if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registra
     }
 }
 
-$success = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
+$success_client = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
             &&
             (!$name_err) && (!$email_err) && (!$password_err) && (!$password2_err));
+
+
+?>
+
+<?php 
+
+include_once("functions.php");
+
+$err_message = NULL;
+$success_server = false;
+if((isset($_POST)) && (!empty($_POST["registration-name"])) && ($_POST["registration-email"]) && ($_POST["registration-password"]) && ($_POST["confirmation-password"]) ) {
+    $insert = "INSERT INTO login.appuser(email, name, password)
+            VALUES(?, ?, ?) ;
+            ";
+   
+    $email = $_POST["registration-email"];
+    $name = $_POST["registration-name"];
+    $password = md5($_POST["registration-password"]);
+
+    $select = "SELECT *
+            FROM login.appuser
+            WHERE email = ?
+            ";
+
+
+    $db = open_mysql_connection();
+
+    $stmt1 = mysqli_prepare($db, $select);
+    mysqli_stmt_bind_param($stmt1, "s", $email);
+    mysqli_stmt_execute($stmt1);
+    $result = mysqli_stmt_get_result($stmt1);
+    print(mysqli_num_rows($result));
+    if(mysqli_num_rows($result)>0) {
+        $err_message = "email is already registered";
+    }else{
+        $stmt = mysqli_prepare($db, $insert);
+        mysqli_stmt_bind_param($stmt, "sss", $email, $name, $password);
+        $success_server = mysqli_stmt_execute($stmt);
+        mysqli_close($db);
+    }
+
+
+}
 
 
 ?>
@@ -60,11 +103,17 @@ $success = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_P
 
 <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
 
-<?php if($success) { ?>
+<?php if($success_client && $success_server) { ?>
 <div class="sm:container" style="padding:10px">
 <p class="bg-success fg-contrast-success">Registration of user was successful</p>
 </div>
 <?php }?>
+
+<?php if(!empty($err_message)) { ?>
+<div class="sm:container" style="padding:10px">
+<p class="bg-danger fg-contrast-danger"><?php print($err_message); ?></p>
+</div>
+<?php } ?>
 
 <form method="POST"  novalidate="true" action=<?php print($_SERVER["PHP_SELF"]); ?>>
 
@@ -75,7 +124,6 @@ $success = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_P
       <?php if($name_err) {?>
       <div name="name-validation-danger" id="name-validation" class="form-text">Name is required</div>
       <?php }?>
-   
     </div>
 
     <!--email-->
