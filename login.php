@@ -103,6 +103,11 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
         <a class= "theme-info underline-offset-2 underline-20 hover:underline-100" href="reset.php" >Reset your password</a>
         </div>
 
+        <div class="form-field" style="padding:10px">
+            <input name="remember-me" type="checkbox" id="checksuccess" class="check theme-success" unchecked />
+            <label for="checksuccess">Remember me</label>
+        </div>
+
         <div class="sm:container" style="padding:10px">
         <button type="submit" class="btn-solid theme-success">Log In</button>
         <a href="registration.php"><button type="button" formaction= "registration.php" class="btn-outline theme-success">Registration</button></a>
