@@ -14,6 +14,8 @@ include_once("functions.php");
 }else{
     $logged = false;
 }*/
+$logged = NULL;
+$error_msg = NULL;
 
 $email_err = false;
 if( isset($_POST) && isset($_POST["input-email"])) {
@@ -25,13 +27,11 @@ if( isset($_POST) && isset($_POST["input-email"])) {
 }
 
 
-$logged = NULL;
-$error_msg = NULL;
+
 if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err)) {
 
     $db = open_mysql_connection();
 
-    print("22");
 
     $select = "SELECT *
                 FROM login.appuser
