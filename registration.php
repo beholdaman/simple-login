@@ -121,7 +121,12 @@ if($success_formatting) {
     <!--name-->
     <div class="sm:container" style="padding:10px">
       <label for="registration-name" class="form-label">Name</label>
-      <input name="registration-name" type="text" class="form-control" id="registration-name">
+      <input name="registration-name" type="text" class="form-control" id="registration-name" 
+      value="<?php
+      if((isset($_POST)) && (!empty($_POST["registration-name"]))) {
+        print($_POST["registration-name"]);
+      }
+      ?>">
       <?php if($name_err) {?>
       <div name="name-validation-danger" id="name-validation" class="form-text">Name is required</div>
       <?php }?>
@@ -130,7 +135,12 @@ if($success_formatting) {
     <!--email-->
     <div class="sm:container" style="padding:10px">
       <label for="registration-email" class="form-label">Email</label>
-      <input name = "registration-email" type="email" class="form-control" id="registration-email" required aria-describedby="email-validation">
+      <input name = "registration-email" type="email" class="form-control" id="registration-email" required aria-describedby="email-validation"
+      value="<?php
+      if((isset($_POST)) && (!empty($_POST["registration-email"])) ) {
+        print($_POST["registration-email"]);
+      }
+      ?>">
       <?php if($email_err) { ?>
       <div id="email-validation" class="form-text">Email is not formatted properly</div>
       <?php }?>

@@ -8,8 +8,8 @@
 <?php
 
 $email_err = false;
-if( isset($_POST) && isset($_POST["registration-email"])) {
-    if(filter_var($_POST["registration-email"], FILTER_VALIDATE_EMAIL) ) {
+if( isset($_POST) && isset($_POST["reset-email"])) {
+    if(filter_var($_POST["reset-email"], FILTER_VALIDATE_EMAIL) ) {
         $email_err = false;
     }else{
         $email_err = true;
@@ -17,8 +17,8 @@ if( isset($_POST) && isset($_POST["registration-email"])) {
 }
 
 $password_err = false;
-if( isset($_POST) && isset($_POST["registration-password"])) {
-    if(strlen($_POST["registration-password"]) >=8 ) {
+if( isset($_POST) && isset($_POST["reset-password"])) {
+    if(strlen($_POST["reset-password"]) >=8 ) {
         $password_err = false;
     }else{
         $password_err = true;
@@ -26,8 +26,8 @@ if( isset($_POST) && isset($_POST["registration-password"])) {
 }
 
 $password2_err = false;
-if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registration-password"])) {
-    if(($_POST["confirmation-password"])==$_POST["registration-password"] ) {
+if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["reset-password"])) {
+    if(($_POST["confirmation-password"])==$_POST["reset-password"] ) {
         $password2_err = false;
     }else{
         $password2_err = true;
@@ -36,22 +36,22 @@ if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registra
 
 include_once("functions.php");
 
-$success_formatting = (isset($_POST) && (isset($_POST["registration-email"]))  && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
+$success_formatting = (isset($_POST) && (isset($_POST["reset-email"]))  && (isset($_POST["reset-password"])) && (isset($_POST["confirmation-password"])) 
             &&
             (!$email_err) && (!$password_err) && (!$password2_err));
 
 
 $err_message = NULL;
 $success_db = false;
-if((isset($_POST)) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) ) {
+if((isset($_POST)) && (isset($_POST["reset-email"])) && (isset($_POST["reset-password"])) && (isset($_POST["confirmation-password"])) ) {
 
     $select = "SELECT *
                 FROM login.appuser
                 WHERE email = ? ;
                 ";
 
-    $email = $_POST["registration-email"];
-    $password = md5($_POST["registration-password"]);
+    $email = $_POST["reset-email"];
+    $password = md5($_POST["reset-password"]);
     
     $update = " UPDATE login.appuser SET password = ? 
                 WHERE email = ?;
@@ -106,8 +106,13 @@ if((isset($_POST)) && (isset($_POST["registration-email"])) && (isset($_POST["re
 
     <!--email-->
     <div class="sm:container" style="padding:10px">
-      <label for="registration-email" class="form-label">Email</label>
-      <input name = "registration-email" type="email" class="form-control" id="registration-email" required aria-describedby="email-validation">
+      <label for="reset-email" class="form-label">Email</label>
+      <input name = "reset-email" type="email" class="form-control" id="reset-email" required aria-describedby="email-validation" 
+        value="<?php
+        if( (isset($_POST)) && (!empty($_POST["reset-email"]))) {
+            print($_POST["reset-email"]);
+        }
+        ?>">
       <?php if($email_err) { ?>
       <div id="email-validation" class="form-text">Email is not formatted properly</div>
       <?php }?>
@@ -115,8 +120,8 @@ if((isset($_POST)) && (isset($_POST["registration-email"])) && (isset($_POST["re
 
     <!--password-->
     <div class="sm:container" style="padding:10px">
-      <label for="registration-password" class="form-label">Password</label>
-      <input name="registration-password" type="password" class="form-control" id="registration-password" required aria-describedby="password-validation">
+      <label for="reset-password" class="form-label">Password</label>
+      <input name="reset-password" type="password" class="form-control" id="reset-password" required aria-describedby="password-validation">
       <?php if($password_err) { ?>
       <div id="password-validation" class="form-text">Password must be at least 8 characters long</div>
       <?php }?>
