@@ -43,7 +43,7 @@ $success_formatting = (isset($_POST) && (isset($_POST["registration-email"]))  &
 
 $err_message = NULL;
 $success_db = false;
-if((isset($_POST)) && ($_POST["registration-email"]) && ($_POST["registration-password"]) && ($_POST["confirmation-password"]) ) {
+if((isset($_POST)) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) ) {
 
     $select = "SELECT *
                 FROM login.appuser

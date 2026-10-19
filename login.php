@@ -5,16 +5,50 @@ print_r($_POST);
 ?>
 
 <?php
-$logged = NULL;
-
-if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) ) {
+/*if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) ) {
     if(($_POST["input-email"]=="chiara.passoni6@studenti.unimi.it") && ($_POST["input-password"]=="FRNHFKBG") ) {
         $logged = true;
     }
 }else{
     $logged = false;
+}*/
+
+include_once("functions.php");
+$logged = NULL;
+$error_msg = NULL;
+if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"]))) {
+
+    $db = open_mysql_connection();
+
+    print("22");
+
+    $select = "SELECT *
+                FROM login.appuser
+                WHERE email = ? AND password = ? 
+                ";
+    $email = $_POST["input-email"];
+    $password = md5($_POST["input-password"]);
+
+    $statement = mysqli_prepare($db, $select);
+
+    mysqli_stmt_bind_param($statement, "ss", $email, $password);
+
+    mysqli_stmt_execute($statement);
+   
+    $result = mysqli_stmt_get_result($statement);
+    
+    if(mysqli_num_rows($result)==1) {
+        $logged = mysqli_fetch_all($result, MYSQLI_BOTH)[0];
+    }else{
+        $error_msg = "Failed to login";
+    }
+
+    mysqli_close($db);
+
+   
 }
-print($logged);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -26,9 +60,17 @@ print($logged);
 </head>
 <body>
 
-<?php if(!$logged) { ?>
+<?php if(empty($logged)) { ?>
     <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
     <form action= <?php print($_SERVER["PHP_SELF"]);?> method="POST">
+
+    <?php if(!empty($error_msg)) { ?>
+        <div class="sm:container" style="padding:10px">
+        <p class="bg-danger fg-contrast-danger"><?php print($error_msg); ?></p>
+        </div>
+    <?php } ?>
+
+
         <div class="sm:container" style="padding:10px">
             <label for="input-email" class="form-label">Email address</label>
             <input type="email" class="form-control" id="input-email" name="input-email" aria-describedby="emailHelp" placeholder="name@example.com" 
@@ -56,7 +98,7 @@ print($logged);
     </div>
 <?php }else{ ?>
     <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
-        <p>Welcome User</p>
+        <p>Welcome, <?php print($logged["name"]); ?></p>
     </div>
 <?php } ?>
 </body>
