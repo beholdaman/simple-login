@@ -7,13 +7,9 @@ include_once("functions.php");
 ?>
 
 <?php
-/*if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) ) {
-    if(($_POST["input-email"]=="chiara.passoni6@studenti.unimi.it") && ($_POST["input-password"]=="FRNHFKBG") ) {
-        $logged = true;
-    }
-}else{
-    $logged = false;
-}*/
+
+session_start();
+
 $logged = NULL;
 $error_msg = NULL;
 
@@ -57,6 +53,19 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
     mysqli_close($db);
 
    
+}
+
+if(isset($_SESSION["log-person"])) {
+    $logged = $_SESSION["log-person"];
+}
+
+if(isset($logged)) {
+    $_SESSION["log-person"] = $logged;
+}
+
+if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
+    unset($_SESSION["log-person"]);
+    $logged = NULL;
 }
 
 
@@ -119,6 +128,7 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
     <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
         <p>Welcome, <?php print($logged["name"]); ?></p>
         <p>Email: <i><?php print($logged["email"]); ?> </i></p>
+        <a href="login.php?logout=true"><button type="button" class="btn btn-link theme-danger" style="padding:0px">Logout</button></a>
     </div>
 <?php } ?>
 </body>
