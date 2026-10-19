@@ -8,7 +8,7 @@
 <?php
 $name_err = false;
 if( isset($_POST) && isset($_POST["registration-name"])) {
-    if( ( $_POST["registration-name"] != "") ) {
+    if( (!empty( $_POST["registration-name"])) ) {
         $name_err = false;
     }else{
         $name_err = true;
@@ -42,7 +42,7 @@ if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registra
     }
 }
 
-$success_formatting = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-name"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
+$success_formatting = (isset($_POST) && (!empty($_POST["registration-email"])) && (!empty($_POST["registration-name"])) && (!empty($_POST["registration-password"])) && (!empty($_POST["confirmation-password"])) 
             &&
             (!$name_err) && (!$email_err) && (!$password_err) && (!$password2_err));
 
@@ -55,7 +55,7 @@ include_once("functions.php");
 
 $err_message = NULL;
 $success_db = false;
-if((isset($_POST)) && (!empty($_POST["registration-name"])) && ($_POST["registration-email"]) && ($_POST["registration-password"]) && ($_POST["confirmation-password"]) ) {
+if($success_formatting) {
     $insert = "INSERT INTO login.appuser(email, name, password)
             VALUES(?, ?, ?) ;
             ";
