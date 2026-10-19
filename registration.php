@@ -42,7 +42,7 @@ if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registra
     }
 }
 
-$success_client = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-email"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
+$success_formatting = (isset($_POST) && (isset($_POST["registration-email"])) && (isset($_POST["registration-name"])) && (isset($_POST["registration-password"])) && (isset($_POST["confirmation-password"])) 
             &&
             (!$name_err) && (!$email_err) && (!$password_err) && (!$password2_err));
 
@@ -54,7 +54,7 @@ $success_client = (isset($_POST) && (isset($_POST["registration-email"])) && (is
 include_once("functions.php");
 
 $err_message = NULL;
-$success_server = false;
+$success_db = false;
 if((isset($_POST)) && (!empty($_POST["registration-name"])) && ($_POST["registration-email"]) && ($_POST["registration-password"]) && ($_POST["confirmation-password"]) ) {
     $insert = "INSERT INTO login.appuser(email, name, password)
             VALUES(?, ?, ?) ;
@@ -82,10 +82,11 @@ if((isset($_POST)) && (!empty($_POST["registration-name"])) && ($_POST["registra
     }else{
         $stmt = mysqli_prepare($db, $insert);
         mysqli_stmt_bind_param($stmt, "sss", $email, $name, $password);
-        $success_server = mysqli_stmt_execute($stmt);
-        mysqli_close($db);
+        $success_db = mysqli_stmt_execute($stmt);
+       
     }
 
+     mysqli_close($db);
 
 }
 
@@ -103,7 +104,7 @@ if((isset($_POST)) && (!empty($_POST["registration-name"])) && ($_POST["registra
 
 <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
 
-<?php if($success_client && $success_server) { ?>
+<?php if($success_formatting && $success_db) { ?>
 <div class="sm:container" style="padding:10px">
 <p class="bg-success fg-contrast-success">Registration of user was successful</p>
 </div>
