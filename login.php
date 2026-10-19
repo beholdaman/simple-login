@@ -100,7 +100,7 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
         </div>
 
         <div class="sm:container" style="padding-left:10px; padding-right:10px; padding-bottom:10px">
-        <a class= "theme-info underline-offset-2 underline-20 hover:underline-100" href="reset.php" >Reset your password</a>
+        <a class="theme-success underline-success underline-20 hover:underline-100" href="reset.php">Reset your password</a>
         </div>
 
         <div class="form-field" style="padding:10px">
@@ -118,6 +118,7 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
 <?php }else{ ?>
     <div class="sm:container" style="padding-right:20%; padding-left:20%; padding-top:10%">
         <p>Welcome, <?php print($logged["name"]); ?></p>
+        <p>Email: <i><?php print($logged["email"]); ?> </i></p>
     </div>
 <?php } ?>
 </body>
