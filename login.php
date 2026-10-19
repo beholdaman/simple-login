@@ -1,7 +1,9 @@
 <?php
 ini_set("display_errors", 1);
 ini_set("error_reporting", E_ALL);
-print_r($_POST);                  
+print_r($_POST);  
+
+include_once("functions.php");
 ?>
 
 <?php
@@ -13,10 +15,19 @@ print_r($_POST);
     $logged = false;
 }*/
 
-include_once("functions.php");
+$email_err = false;
+if( isset($_POST) && isset($_POST["input-email"])) {
+    if(filter_var($_POST["input-email"], FILTER_VALIDATE_EMAIL) ) {
+        $email_err = false;
+    }else{
+        $email_err = true;
+    }
+}
+
+
 $logged = NULL;
 $error_msg = NULL;
-if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"]))) {
+if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err)) {
 
     $db = open_mysql_connection();
 
@@ -79,6 +90,9 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
                     print($_POST["input-email"]);
                 }
                 ?>>
+            <?php if($email_err) { ?>
+               <div id="email-validation" class="form-text">Email is not formatted properly</div>
+            <?php }?>
         </div>
         <div class="sm:container" style="padding:10px">
             <label for="input-password" class="form-label">Password</label>
