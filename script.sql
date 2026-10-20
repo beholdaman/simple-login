@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS login;
 CREATE DATABASE login;
 
