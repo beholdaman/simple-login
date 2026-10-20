@@ -8,6 +8,8 @@ include_once("functions.php");
 ?>
 
 <?php
+session_start();
+print_r($_SESSION);
 
 
 
@@ -23,42 +25,42 @@ if( isset($_POST) && isset($_POST["input-email"])) {
     }
 }
 
+$password_err = false;
+if( isset($_POST) && isset($_POST["input-password"])) {
+    if(!empty($_POST["input-password"]) ) {
+        $password_err = false;
+    }else{
+        $password_err = true;
+    }
+}
+
+
 $db = open_mysql_connection();
 
 if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err)) {
 
 
-    /*$select = "SELECT *
-                FROM login.appuser
-                WHERE email = ? AND password = ? 
-                ";
-    $email = $_POST["input-email"];
-    $password = md5($_POST["input-password"]);
-
-    $statement = mysqli_prepare($db, $select);
-
-    mysqli_stmt_bind_param($statement, "ss", $email, $password);
-
-    mysqli_stmt_execute($statement);
-   
-    $result = mysqli_stmt_get_result($statement);
-    
-    if(mysqli_num_rows($result)==1) {
-        $logged = mysqli_fetch_all($result, MYSQLI_BOTH)[0];
-    }else{
-        $error_msg = "Failed to login";
-    }*/
-
     $logged = check_login($db, $_POST["input-email"], md5($_POST["input-password"]));
 
     if(empty($logged)) {
         $error_msg = "Failed to log in";
+        $login_failure = true;
+        $_SESSION["login-errors"] = $_SESSION["login-errors"] + 1;
+
+        if($_SESSION["login-errors"] > 5) {
+            $_SESSION["timeout"] = time() + 60;
+            $error_msg = "Failed to log in 5 times. 1 minute timeout";
+        }
+    }else{
+        $_SESSION["login-errors"] = 1;
     }
 
-   
 
-   
+
 }
+
+    $disable_login = (!empty($_SESSION["login-errors"]) && (!empty($_SESSION["timeout"])) && ($_SESSION["login-errors"] >= 5) && ($_SESSION["timeout"] > time()) );
+
 
 
 /*if(isset($_SESSION["log-person"])) {
@@ -131,6 +133,9 @@ mysqli_close($db);
         <div class="sm:container" style="padding:10px">
             <label for="input-password" class="form-label">Password</label>
             <input type="password" class="form-control" id="input-password" name="input-password">
+            <?php if($password_err) { ?>
+               <div id="password-validation" class="form-text">Insert a password</div>
+            <?php }?>
         </div>
 
         <div class="sm:container" style="padding-left:10px; padding-right:10px; padding-bottom:10px">
@@ -143,7 +148,7 @@ mysqli_close($db);
         </div>
 
         <div class="sm:container" style="padding:10px">
-        <button type="submit" class="btn-solid theme-success">Log In</button>
+            <button type="submit" class="btn-solid theme-success" <?php if($disable_login) { print("disabled"); } ?>>Log In</button>
         <a href="registration.php"><button type="button" formaction= "registration.php" class="btn-outline theme-success">Registration</button></a>
         </div>
 
