@@ -37,7 +37,7 @@ if( isset($_POST) && isset($_POST["input-password"])) {
 
 $db = open_mysql_connection();
 
-if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err)) {
+if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err) ) {
 
 
     $logged = check_login($db, $_POST["input-email"], md5($_POST["input-password"]));
@@ -62,22 +62,13 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
     $disable_login = (!empty($_SESSION["login-errors"]) && (!empty($_SESSION["timeout"])) && ($_SESSION["login-errors"] >= 5) && ($_SESSION["timeout"] > time()) );
 
 
-
-/*if(isset($_SESSION["log-person"])) {
-    $logged = $_SESSION["log-person"];
-}
-
-if(isset($logged)) {
-    $_SESSION["log-person"] = $logged;
-}*/
-
 if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
 
     if(isset($_POST) && (empty($_POST["remember-me"])) ) {
         unset($_COOKIE["email"]);
-        setcookie("email", "", time()-1, "/login/", "localhost", false, true);
+        setcookie("email", "", time()-1, "/login/", "localhost", true, true);
         unset($_COOKIE["password"]);
-        setcookie("password", "", time()-1, "/login/", "localhost", false, true);
+        setcookie("password", "", time()-1, "/login/", "localhost", true, true);
     }
     
     $logged = NULL;
@@ -85,8 +76,8 @@ if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
 
 if(isset($_POST) && (!empty($_POST["remember-me"])) && ($_POST["remember-me"]) && (!empty($logged) ) ) {
 
-    setcookie("email", $logged["email"], time()+60*60*24*30, "/login/", "localhost", false, true);
-    setcookie("password", $logged["password"], time()+60*60*24*30, "/login/", "localhost", false, true);
+    setcookie("email", $logged["email"], time()+60*60*24*30, "/login/", "localhost", true, true);
+    setcookie("password", $logged["password"], time()+60*60*24*30, "/login/", "localhost", true, true);
 
 }
 
