@@ -167,6 +167,10 @@ if($success_formatting) {
     <div class="sm:container" style="padding:10px">
         <button type="submit" class="btn-solid theme-success">Register</button>
     </div>
+
+     <div class="sm:container" style="padding-left:10px; padding-right:10px; padding-bottom:10px">
+        <a class="theme-success underline-success underline-20 hover:underline-100" href="login.php">Login page</a>
+    </div>
 </form>
 </div>
 

@@ -140,6 +140,10 @@ if((isset($_POST)) && (isset($_POST["reset-email"])) && (isset($_POST["reset-pas
         <button type="submit" class="btn-outline theme-danger">Reset Password</button>
     </div>
 
+     <div class="sm:container" style="padding-left:10px; padding-right:10px; padding-bottom:10px">
+        <a class="theme-success underline-success underline-20 hover:underline-100" href="login.php">Login page</a>
+    </div>
+
 </form>
 
 </div>
