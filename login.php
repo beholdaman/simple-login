@@ -1,14 +1,15 @@
 <?php
 ini_set("display_errors", 1);
 ini_set("error_reporting", E_ALL);
-print_r($_POST);  
+print_r($_POST);
+print_r($_COOKIE);  
 
 include_once("functions.php");
 ?>
 
 <?php
 
-session_start();
+
 
 $logged = NULL;
 $error_msg = NULL;
@@ -22,14 +23,12 @@ if( isset($_POST) && isset($_POST["input-email"])) {
     }
 }
 
-
+$db = open_mysql_connection();
 
 if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err)) {
 
-    $db = open_mysql_connection();
 
-
-    $select = "SELECT *
+    /*$select = "SELECT *
                 FROM login.appuser
                 WHERE email = ? AND password = ? 
                 ";
@@ -48,26 +47,52 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
         $logged = mysqli_fetch_all($result, MYSQLI_BOTH)[0];
     }else{
         $error_msg = "Failed to login";
+    }*/
+
+    $logged = check_login($db, $_POST["input-email"], md5($_POST["input-password"]));
+
+    if(empty($logged)) {
+        $error_msg = "Failed to log in";
     }
 
-    mysqli_close($db);
+   
 
    
 }
 
-if(isset($_SESSION["log-person"])) {
+
+/*if(isset($_SESSION["log-person"])) {
     $logged = $_SESSION["log-person"];
 }
 
 if(isset($logged)) {
     $_SESSION["log-person"] = $logged;
-}
+}*/
 
 if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
-    unset($_SESSION["log-person"]);
+
+    if(isset($_POST) && (empty($_POST["remember-me"])) ) {
+        unset($_COOKIE["email"]);
+        setcookie("email", "", time()-1, "/login/", "localhost", false, true);
+        unset($_COOKIE["password"]);
+        setcookie("password", "", time()-1, "/login/", "localhost", false, true);
+    }
+    
     $logged = NULL;
 }
 
+if(isset($_POST) && (!empty($_POST["remember-me"])) && ($_POST["remember-me"]) && (!empty($logged) ) ) {
+
+    setcookie("email", $logged["email"], time()+60*60*24*30, "/login/", "localhost", false, true);
+    setcookie("password", $logged["password"], time()+60*60*24*30, "/login/", "localhost", false, true);
+
+}
+
+if(isset($_COOKIE) && (!empty($_COOKIE["email"])) && (!empty($_COOKIE["password"])) ) {
+   $logged = check_login($db, $_COOKIE["email"], $_COOKIE["password"]);
+}
+
+mysqli_close($db);
 
 ?>
 
@@ -113,7 +138,7 @@ if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
         </div>
 
         <div class="form-field" style="padding:10px">
-            <input name="remember-me" type="checkbox" id="checksuccess" class="check theme-success" unchecked />
+            <input name="remember-me" type="checkbox" id="checksuccess" class="check theme-success" unchecked  value="true"/>
             <label for="checksuccess">Remember me</label>
         </div>
 
