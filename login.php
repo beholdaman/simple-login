@@ -37,7 +37,7 @@ if( isset($_POST) && isset($_POST["input-password"])) {
 
 $db = open_mysql_connection();
 
-if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err) ) {
+if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err) && (!$password_err)) {
 
 
     $logged = check_login($db, $_POST["input-email"], md5($_POST["input-password"]));
