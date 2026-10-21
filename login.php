@@ -57,6 +57,13 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && ($_POST["input-passwor
 
 }
 
+//si tenta il login con i cookie salvati se presenti
+if(isset($_COOKIE) && (!empty($_COOKIE["email"])) && (!empty($_COOKIE["password"])) ) {
+   $logged = check_login($db, $_COOKIE["email"], $_COOKIE["password"]);
+}
+
+mysqli_close($db);
+
 
 if(isset($_SESSION["log-person"])) {
     $logged = $_SESSION["log-person"];
@@ -90,12 +97,7 @@ if(isset($_POST) && (!empty($_POST["remember-me"])) && ($_POST["remember-me"]) &
     setcookie("password", $logged["password"], time()+60*60*24*30, "/login/", "localhost", true, true);
 
 }
-//si tenta il login con i cookie salvati se presenti
-if(isset($_COOKIE) && (!empty($_COOKIE["email"])) && (!empty($_COOKIE["password"])) ) {
-   $logged = check_login($db, $_COOKIE["email"], $_COOKIE["password"]);
-}
 
-mysqli_close($db);
 
 ?>
 
