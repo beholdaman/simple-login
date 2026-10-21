@@ -29,6 +29,10 @@ if( isset($_POST) && isset($_POST["input-password"])) {
     $password_err = (empty($_POST["input-password"]));
 }
 
+if(!isset($_SESSION["login-errors"])) {
+    $_SESSION["login-errors"] = 0;
+}
+
 
 $db = open_mysql_connection();
 
