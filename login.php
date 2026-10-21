@@ -1,15 +1,15 @@
 <?php
-ini_set("display_errors", 1);
+/*ini_set("display_errors", 1);
 ini_set("error_reporting", E_ALL);
 print_r($_POST);
 print_r($_COOKIE);  
+print_r($_SESSION);*/
 
 include_once("functions.php");
 ?>
 
 <?php
 session_start();
-print_r($_SESSION);
 
 
 

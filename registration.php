@@ -1,45 +1,30 @@
 
 <?php
-    ini_set("display_errors", 1);
+    /*ini_set("display_errors", 1);
     ini_set("error_reporting", E_ALL);
-    print_r($_POST);    
+    print_r($_POST);*/    
 ?>
 
 <?php
 $name_err = false;
 if( isset($_POST) && isset($_POST["registration-name"])) {
-    if( (!empty( $_POST["registration-name"])) ) {
-        $name_err = false;
-    }else{
-        $name_err = true;
-    }
+    $name_err = empty( $_POST["registration-name"]);
 }
 
 $email_err = false;
 if( isset($_POST) && isset($_POST["registration-email"])) {
-    if(filter_var($_POST["registration-email"], FILTER_VALIDATE_EMAIL) ) {
-        $email_err = false;
-    }else{
-        $email_err = true;
-    }
+    $email_err = !filter_var($_POST["registration-email"], FILTER_VALIDATE_EMAIL); 
 }
 
 $password_err = false;
 if( isset($_POST) && isset($_POST["registration-password"])) {
-    if(strlen($_POST["registration-password"]) >=8 ) {
-        $password_err = false;
-    }else{
-        $password_err = true;
-    }
+    $password_err = strlen($_POST["registration-password"]) < 8;
 }
 
 $password2_err = false;
 if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["registration-password"])) {
-    if(($_POST["confirmation-password"])==$_POST["registration-password"] ) {
-        $password2_err = false;
-    }else{
-        $password2_err = true;
-    }
+    $password2_err = ($_POST["confirmation-password"])!=$_POST["registration-password"];
+ 
 }
 
 $success_formatting = (isset($_POST) && (!empty($_POST["registration-email"])) && (!empty($_POST["registration-name"])) && (!empty($_POST["registration-password"])) && (!empty($_POST["confirmation-password"])) 
@@ -73,10 +58,13 @@ if($success_formatting) {
     $db = open_mysql_connection();
 
     $stmt1 = mysqli_prepare($db, $select);
+
     mysqli_stmt_bind_param($stmt1, "s", $email);
+
     mysqli_stmt_execute($stmt1);
+
     $result = mysqli_stmt_get_result($stmt1);
-    print(mysqli_num_rows($result));
+    
     if(mysqli_num_rows($result)>0) {
         $err_message = "email is already registered";
     }else{

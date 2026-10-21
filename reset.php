@@ -1,37 +1,25 @@
 
 <?php
-    ini_set("display_errors", 1);
+    /*ini_set("display_errors", 1);
     ini_set("error_reporting", E_ALL);
-    print_r($_POST);
+    print_r($_POST);*/
 ?>
 
 <?php
 
 $email_err = false;
 if( isset($_POST) && isset($_POST["reset-email"])) {
-    if(filter_var($_POST["reset-email"], FILTER_VALIDATE_EMAIL) ) {
-        $email_err = false;
-    }else{
-        $email_err = true;
-    }
+    $email_err = !filter_var($_POST["reset-email"], FILTER_VALIDATE_EMAIL);
 }
 
 $password_err = false;
 if( isset($_POST) && isset($_POST["reset-password"])) {
-    if(strlen($_POST["reset-password"]) >=8 ) {
-        $password_err = false;
-    }else{
-        $password_err = true;
-    }
+    $password_err = strlen($_POST["reset-password"]) < 8;
 }
 
 $password2_err = false;
 if( isset($_POST) && isset($_POST["confirmation-password"]) && ($_POST["reset-password"])) {
-    if(($_POST["confirmation-password"])==$_POST["reset-password"] ) {
-        $password2_err = false;
-    }else{
-        $password2_err = true;
-    }
+    $password2_err = ($_POST["confirmation-password"])!=$_POST["reset-password"];
 }
 
 include_once("functions.php");
