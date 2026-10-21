@@ -16,6 +16,7 @@ print_r($_SESSION);
 $logged = NULL;
 $error_msg = NULL;
 
+
 //l'email è sbagliata se è stata inserita ma non è nel formato corretto
 $email_err = false;
 if( isset($_POST) && isset($_POST["input-email"])) {
@@ -50,8 +51,15 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && ($_POST["input-passwor
         $_SESSION["login-errors"] = 0;
     }
 
+}
 
 
+if(isset($_SESSION["log-person"])) {
+    $logged = $_SESSION["log-person"];
+}
+
+if(isset($logged)) {
+    $_SESSION["log-person"] = $logged;
 }
 
 //si disabilita il login se si sono fatti 5 o pi errori e il tempo di timeout non è scaduto
@@ -67,7 +75,7 @@ if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
         unset($_COOKIE["password"]);
         setcookie("password", "", time()-1, "/login/", "localhost", true, true);
     }
-    
+    unset($_SESSION["log-person"]);
     $logged = NULL;
 }
 
