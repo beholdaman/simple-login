@@ -16,39 +16,34 @@ print_r($_SESSION);
 $logged = NULL;
 $error_msg = NULL;
 
+//l'email è sbagliata se è stata inserita ma non è nel formato corretto
 $email_err = false;
 if( isset($_POST) && isset($_POST["input-email"])) {
-    if(filter_var($_POST["input-email"], FILTER_VALIDATE_EMAIL) ) {
-        $email_err = false;
-    }else{
-        $email_err = true;
-    }
+    $email_err = !(filter_var($_POST["input-email"], FILTER_VALIDATE_EMAIL));
 }
 
+//la password è sbagliata solo se vuota
 $password_err = false;
 if( isset($_POST) && isset($_POST["input-password"])) {
-    if(!empty($_POST["input-password"]) ) {
-        $password_err = false;
-    }else{
-        $password_err = true;
-    }
+    $password_err = (empty($_POST["input-password"]));
 }
 
 
 $db = open_mysql_connection();
 
-if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-password"])) && (!$email_err) && (!$password_err)) {
+//si tenta il login solo se i campi sono compilati correttamente
+if( (isset($_POST)) && (!empty($_POST["input-email"])) && ($_POST["input-password"]) && (!$email_err) && (!$password_err)) {
 
 
     $logged = check_login($db, $_POST["input-email"], md5($_POST["input-password"]));
-
+    //se il login fallisce si incrementa il numero dei fallimenti
     if(empty($logged)) {
         $error_msg = "Failed to log in";
         $login_failure = true;
         $_SESSION["login-errors"] = $_SESSION["login-errors"] + 1;
 
         if($_SESSION["login-errors"] >= 5) {
-            $_SESSION["timeout"] = time() + 60;
+            $_SESSION["timeout"] = time() + 60; //1 minuto di timeout
             $error_msg = "Failed to log in 5 times. 1 minute timeout";
         }
     }else{
@@ -59,11 +54,13 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
 
 }
 
-    $disable_login = (!empty($_SESSION["login-errors"]) && (!empty($_SESSION["timeout"])) && ($_SESSION["login-errors"] >= 5) && ($_SESSION["timeout"] > time()) );
+//si disabilita il login se si sono fatti 5 o pi errori e il tempo di timeout non è scaduto
+$disable_login = (!empty($_SESSION["login-errors"]) && (!empty($_SESSION["timeout"])) 
+    && ($_SESSION["login-errors"] >= 5) && ($_SESSION["timeout"] > time()) );
 
-
+//logout su richiesta
 if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
-
+    //se non si è chiesto di ricordare si eliminano i cookie
     if(isset($_POST) && (empty($_POST["remember-me"])) ) {
         unset($_COOKIE["email"]);
         setcookie("email", "", time()-1, "/login/", "localhost", true, true);
@@ -74,13 +71,14 @@ if(isset($_GET) && (!empty($_GET["logout"])) && ($_GET["logout"]) ) {
     $logged = NULL;
 }
 
+//si caricano i cookie se si è fatto login con successo e si è richiesto di ricordare
 if(isset($_POST) && (!empty($_POST["remember-me"])) && ($_POST["remember-me"]) && (!empty($logged) ) ) {
 
     setcookie("email", $logged["email"], time()+60*60*24*30, "/login/", "localhost", true, true);
     setcookie("password", $logged["password"], time()+60*60*24*30, "/login/", "localhost", true, true);
 
 }
-
+//si tenta il login con i cookie salvati se presenti
 if(isset($_COOKIE) && (!empty($_COOKIE["email"])) && (!empty($_COOKIE["password"])) ) {
    $logged = check_login($db, $_COOKIE["email"], $_COOKIE["password"]);
 }
