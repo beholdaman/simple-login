@@ -31,7 +31,7 @@ $success_formatting = (isset($_POST) && (isset($_POST["reset-email"]))  && (isse
 
 $err_message = NULL;
 $success_db = false;
-if((isset($_POST)) && (isset($_POST["reset-email"])) && (isset($_POST["reset-password"])) && (isset($_POST["confirmation-password"])) ) {
+if((isset($_POST)) && (isset($_POST["reset-email"])) && (isset($_POST["reset-password"])) && (isset($_POST["confirmation-password"]) && ($success_formatting)) ) {
 
     $select = "SELECT *
                 FROM login.appuser
