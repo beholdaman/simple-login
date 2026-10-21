@@ -6,8 +6,9 @@ USE login;
 DROP TABLE IF EXISTS appuser;
 
 CREATE TABLE appuser (
-    email VARCHAR(100),
+    id int AUTO_INCREMENT,
+    email VARCHAR(100) UNIQUE NOT NULL,
     name VARCHAR(100) NOT NULL,
     password VARCHAR(100) NOT NULL,
-    PRIMARY KEY(email)
+    PRIMARY KEY(id)
 );
