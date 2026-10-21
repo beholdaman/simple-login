@@ -47,12 +47,12 @@ if( (isset($_POST)) && (!empty($_POST["input-email"])) && (!empty($_POST["input-
         $login_failure = true;
         $_SESSION["login-errors"] = $_SESSION["login-errors"] + 1;
 
-        if($_SESSION["login-errors"] > 5) {
+        if($_SESSION["login-errors"] >= 5) {
             $_SESSION["timeout"] = time() + 60;
             $error_msg = "Failed to log in 5 times. 1 minute timeout";
         }
     }else{
-        $_SESSION["login-errors"] = 1;
+        $_SESSION["login-errors"] = 0;
     }
 
 
